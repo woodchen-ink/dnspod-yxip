@@ -3,9 +3,9 @@
 > 主要针对根域名的CNAME解析和MX解析的冲突问题, 二级域名可以直接指向 **.cf.cname.vvhan.com, 参考网站: https://cf.vvhan.com/  
 > 感谢 https://cf.vvhan.com/ 提供的API接口
 
-根据API接口返回的IP地址, 在DNSPOD中创建或者更新域名的解析记录, 支持分线路和多权重。 
+根据API接口返回的IP地址, 在DNSPOD中创建或者更新域名的解析记录, 自动创建 默认, 联通, 电信, 移动 四个线路的解析记录。 
 
-支持docker运行, 需要配置DNSPOD的ID和TOKEN, 可以配置多个域名。默认每15分钟自动获取IP地址并更新DNSPOD。
+支持docker运行, 需要配置腾讯云的密钥, 可以配置多个域名。5分钟请求一次接口, 并进行对比。
 
 ## 特性
 
@@ -30,15 +30,14 @@ cp .env.example .env
 2. 编辑 `.env` 文件，填写您的配置：
 ```ini
 # DNSPOD API 配置
-DNSPOD_ID=your_id_here
-DNSPOD_TOKEN=your_token_here
+TENCENT_SECRET_ID=your_secret_id_here
+TENCENT_SECRET_KEY=your_secret_key_here
 
 # 域名配置 - 域名1
 DOMAIN_1=example1.com
 SUB_DOMAIN_1=@           # 子域名，@ 表示根域名
 REMARK_1=优选IP          # 记录备注
 TTL_1=600               # TTL值（秒）
-UPDATE_INTERVAL_1=15     # 更新间隔（分钟）
 IPV4_ENABLED_1=true     # 是否启用IPv4记录
 IPV6_ENABLED_1=true     # 是否启用IPv6记录
 ENABLED_1=true          # 是否启用此域名配置
@@ -81,7 +80,6 @@ docker compose up -d
 - `SUB_DOMAIN_n`: 子域名，@ 表示根域名，* 表示泛解析
 - `REMARK_n`: 记录备注
 - `TTL_n`: TTL值（秒）
-- `UPDATE_INTERVAL_n`: 更新间隔（分钟）
 - `IPV4_ENABLED_n`: 是否启用IPv4记录
 - `IPV6_ENABLED_n`: 是否启用IPv6记录
 - `ENABLED_n`: 是否启用此域名配置
