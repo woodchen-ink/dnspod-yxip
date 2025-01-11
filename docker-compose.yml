@@ -1,0 +1,8 @@
+services:
+  dnspod-yxip:
+    image: woodchen/dnspod-yxip:latest
+    container_name: dnspod-yxip
+    restart: always
+    volumes:
+      - ./.env:/app/.env:ro      # 映射环境变量文件
+      - ./logs:/app/logs         # 映射日志目录 
