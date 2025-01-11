@@ -1,6 +1,6 @@
 # DNSPOD 优选域名
 
-> 主要针对根域名的CNAME解析和MX解析的冲突问题, 二级域名可以直接指向 **.cf.cname.vvhan.com, 参考网站: https://cf.vvhan.com/
+> 主要针对根域名的CNAME解析和MX解析的冲突问题, 二级域名可以直接指向 **.cf.cname.vvhan.com, 参考网站: https://cf.vvhan.com/  
 > 感谢 https://cf.vvhan.com/ 提供的API接口
 
 根据API接口返回的IP地址, 在DNSPOD中创建或者更新域名的解析记录, 支持分线路和多权重。 
