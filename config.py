@@ -26,10 +26,8 @@ while True:
         {
             "domain": domain,
             "sub_domain": os.getenv(f"SUB_DOMAIN_{index}", "@"),
-            "record_type": os.getenv(f"RECORD_TYPE_{index}", "A"),
             "remark": os.getenv(f"REMARK_{index}", "优选IP"),
             "ttl": int(os.getenv(f"TTL_{index}", "600")),
-            "update_interval": int(os.getenv(f"UPDATE_INTERVAL_{index}", "15")),
             "ipv4_enabled": os.getenv(f"IPV4_ENABLED_{index}", "true").lower()
             == "true",
             "ipv6_enabled": os.getenv(f"IPV6_ENABLED_{index}", "true").lower()

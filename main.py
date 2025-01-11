@@ -26,8 +26,33 @@ class DNSPodManager:
         clientProfile.httpProfile = httpProfile
         # 实例化要请求产品的client对象
         self.client = dnspod_client.DnspodClient(cred, "", clientProfile)
-        # 记录每个域名每种记录类型的最后更新时间
-        self.last_update = {}  # 格式: {domain: {'A': timestamp, 'AAAA': timestamp}}
+        # 记录当前使用的IP
+        self.current_ips = (
+            {}
+        )  # 格式: {domain: {'默认': {'A': ip, 'AAAA': ip}, '移动': {...}}}
+        # 初始化时获取所有域名当前的记录
+        self.init_current_records()
+
+    def init_current_records(self):
+        """初始化时获取所有域名当前的解析记录"""
+        logger.info("正在获取所有域名当前的解析记录...")
+        for domain_config in config.DOMAINS:
+            if not domain_config["enabled"]:
+                continue
+
+            domain = domain_config["domain"]
+            sub_domain = domain_config["sub_domain"]
+
+            # 获取当前记录
+            current_records = self.get_current_records(domain, sub_domain)
+            if current_records:
+                self.current_ips[domain] = current_records
+                logger.info(f"域名 {domain} - {sub_domain} 当前记录：")
+                for line, records in current_records.items():
+                    for record_type, ip in records.items():
+                        logger.info(f"  - {line} - {record_type}: {ip}")
+            else:
+                logger.warning(f"域名 {domain} - {sub_domain} 暂无解析记录")
 
     def get_optimal_ips(self) -> Dict:
         """获取优选IP"""
@@ -160,11 +185,24 @@ class DNSPodManager:
             logger.error(f"更新DNS记录失败: {str(e)}")
             return False
 
+    def get_current_records(self, domain: str, sub_domain: str) -> Dict:
+        """获取当前域名的所有记录"""
+        try:
+            records = self.get_record_list(domain, sub_domain)
+            current_records = {}
+            for record in records:
+                if record.Line not in current_records:
+                    current_records[record.Line] = {}
+                current_records[record.Line][record.Type] = record.Value
+            return current_records
+        except Exception as e:
+            logger.error(f"获取当前记录失败: {str(e)}")
+            return {}
+
     def update_domain_records(self, domain_config: Dict) -> None:
         """更新单个域名的记录"""
         domain = domain_config["domain"]
         sub_domain = domain_config["sub_domain"]
-        record_type = domain_config["record_type"]
         ttl = domain_config["ttl"]
         remark = domain_config["remark"]
 
@@ -173,82 +211,95 @@ class DNSPodManager:
         if not ip_data:
             return
 
-        # 获取对应版本的IP数据
-        ip_version = "v6" if record_type == "AAAA" else "v4"
-        if ip_version not in ip_data:
-            logger.warning(
-                f"未找到{ip_version}版本的IP数据，跳过更新 {domain} 的 {record_type} 记录"
-            )
-            return
+        # 获取当前记录
+        if domain not in self.current_ips:
+            self.current_ips[domain] = self.get_current_records(domain, sub_domain)
+        current_records = self.current_ips[domain]
 
-        # 检查是否有可用的IP数据
-        has_ip_data = False
-        for line_key in ["CM", "CU", "CT"]:
-            if line_key in ip_data[ip_version] and ip_data[ip_version][line_key]:
-                has_ip_data = True
-                break
+        # 处理默认线路
+        if domain_config["ipv4_enabled"] and "v4" in ip_data:
+            best_ip = self.find_best_ip(ip_data, "v4")
+            if best_ip:
+                ip, latency = best_ip
+                current_ip = current_records.get("默认", {}).get("A")
+                if current_ip != ip:
+                    logger.info(
+                        f"更新A记录: {domain} - {sub_domain} - 默认 - {ip} (延迟: {latency}ms)"
+                    )
+                    if self.update_record(
+                        domain, sub_domain, "A", "默认", ip, ttl, remark
+                    ):
+                        # 更新成功后更新缓存
+                        if "默认" not in current_records:
+                            current_records["默认"] = {}
+                        current_records["默认"]["A"] = ip
+                    time.sleep(1)
 
-        if not has_ip_data:
-            logger.warning(
-                f"没有可用的{ip_version}版本IP数据，跳过更新 {domain} 的 {record_type} 记录"
-            )
-            return
-
-        # 先处理默认线路
-        best_ip = self.find_best_ip(ip_data, ip_version)
-        if best_ip:
-            ip, latency = best_ip
-            logger.info(
-                f"更新{record_type}记录: {domain} - {sub_domain} - 默认 - {ip} (延迟: {latency}ms)"
-            )
-            success = self.update_record(
-                domain, sub_domain, record_type, "默认", ip, ttl, remark
-            )
-            if not success:
-                logger.error(f"更新默认线路记录失败: {domain} - {sub_domain}")
-            time.sleep(1)  # 添加延时
+        if domain_config["ipv6_enabled"] and "v6" in ip_data:
+            best_ip = self.find_best_ip(ip_data, "v6")
+            if best_ip:
+                ip, latency = best_ip
+                current_ip = current_records.get("默认", {}).get("AAAA")
+                if current_ip != ip:
+                    logger.info(
+                        f"更新AAAA记录: {domain} - {sub_domain} - 默认 - {ip} (延迟: {latency}ms)"
+                    )
+                    if self.update_record(
+                        domain, sub_domain, "AAAA", "默认", ip, ttl, remark
+                    ):
+                        # 更新成功后更新缓存
+                        if "默认" not in current_records:
+                            current_records["默认"] = {}
+                        current_records["默认"]["AAAA"] = ip
+                    time.sleep(1)
 
         # 更新其他线路的记录
         line_mapping = {"移动": "CM", "联通": "CU", "电信": "CT"}
 
         for line, line_key in line_mapping.items():
-            if line_key in ip_data[ip_version] and ip_data[ip_version][line_key]:
-                best_ip = self.find_line_best_ip(ip_data, ip_version, line_key)
+            if domain_config["ipv4_enabled"] and "v4" in ip_data:
+                best_ip = self.find_line_best_ip(ip_data, "v4", line_key)
                 if best_ip:
                     ip, latency = best_ip
-                    logger.info(
-                        f"更新{record_type}记录: {domain} - {sub_domain} - {line} - {ip} (延迟: {latency}ms)"
-                    )
-                    success = self.update_record(
-                        domain, sub_domain, record_type, line, ip, ttl, remark
-                    )
-                    if not success:
-                        logger.error(f"更新{line}线路记录失败: {domain} - {sub_domain}")
-                    time.sleep(1)  # 添加延时
+                    current_ip = current_records.get(line, {}).get("A")
+                    if current_ip != ip:
+                        logger.info(
+                            f"更新A记录: {domain} - {sub_domain} - {line} - {ip} (延迟: {latency}ms)"
+                        )
+                        if self.update_record(
+                            domain, sub_domain, "A", line, ip, ttl, remark
+                        ):
+                            # 更新成功后更新缓存
+                            if line not in current_records:
+                                current_records[line] = {}
+                            current_records[line]["A"] = ip
+                        time.sleep(1)
+
+            if domain_config["ipv6_enabled"] and "v6" in ip_data:
+                best_ip = self.find_line_best_ip(ip_data, "v6", line_key)
+                if best_ip:
+                    ip, latency = best_ip
+                    current_ip = current_records.get(line, {}).get("AAAA")
+                    if current_ip != ip:
+                        logger.info(
+                            f"更新AAAA记录: {domain} - {sub_domain} - {line} - {ip} (延迟: {latency}ms)"
+                        )
+                        if self.update_record(
+                            domain, sub_domain, "AAAA", line, ip, ttl, remark
+                        ):
+                            # 更新成功后更新缓存
+                            if line not in current_records:
+                                current_records[line] = {}
+                            current_records[line]["AAAA"] = ip
+                        time.sleep(1)
 
     def check_and_update(self):
         """检查并更新所有域名"""
-        current_time = time.time()
-
         for domain_config in config.DOMAINS:
             if not domain_config["enabled"]:
                 continue
-
-            domain = domain_config["domain"]
-
-            # 处理IPv4记录
-            if domain_config["ipv4_enabled"]:
-                ipv4_config = domain_config.copy()
-                ipv4_config["record_type"] = "A"
-                self.update_domain_records(ipv4_config)
-                time.sleep(1)  # 添加延时
-
-            # 处理IPv6记录
-            if domain_config["ipv6_enabled"]:
-                ipv6_config = domain_config.copy()
-                ipv6_config["record_type"] = "AAAA"
-                self.update_domain_records(ipv6_config)
-                time.sleep(1)  # 添加延时
+            self.update_domain_records(domain_config)
+            time.sleep(1)  # 添加延时
 
 
 def main():
@@ -257,9 +308,10 @@ def main():
     # 首次运行，更新所有域名
     manager.check_and_update()
 
-    # 每分钟检查一次是否需要更新
-    schedule.every(1).minutes.do(manager.check_and_update)
+    # 每5分钟检查一次是否需要更新
+    schedule.every(5).minutes.do(manager.check_and_update)
 
+    logger.info("程序启动成功，开始监控更新（每5分钟检查一次）...")
     while True:
         schedule.run_pending()
         time.sleep(1)
