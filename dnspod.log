@@ -1,0 +1,174 @@
+2025-01-12 04:14:02.822 | INFO     | __main__:check_and_update:273 - 开始更新域名: q58.pro 的 A 记录
+2025-01-12 04:14:03.071 | INFO     | __main__:update_domain_records:222 - 更新A记录: q58.pro - @ - 默认 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:14:03.650 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 190.93.247.127
+2025-01-12 04:14:04.727 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 104.19.41.90
+2025-01-12 04:14:05.381 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 190.93.247.127
+2025-01-12 04:14:06.019 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 104.21.29.190
+2025-01-12 04:14:06.688 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 1.0.0.5
+2025-01-12 04:14:08.060 | INFO     | __main__:update_domain_records:245 - 更新A记录: q58.pro - @ - 移动 - 104.21.225.183 (延迟: 193ms)
+2025-01-12 04:14:08.451 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 移动 - 190.93.247.127
+2025-01-12 04:14:10.032 | INFO     | __main__:update_domain_records:245 - 更新A记录: q58.pro - @ - 联通 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:14:10.504 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 联通 - 104.21.225.183
+2025-01-12 04:14:11.807 | INFO     | __main__:update_domain_records:245 - 更新A记录: q58.pro - @ - 电信 - 162.159.240.184 (延迟: 162ms)
+2025-01-12 04:14:12.238 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 电信 - 190.93.247.127
+2025-01-12 04:14:13.928 | INFO     | __main__:check_and_update:273 - 开始更新域名: q58.pro 的 AAAA 记录
+2025-01-12 04:14:14.161 | INFO     | __main__:update_domain_records:222 - 更新AAAA记录: q58.pro - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:14:14.792 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:15.446 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:16.091 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:17.205 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:18.660 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: q58.pro - @ - 移动 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:14:19.059 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 移动 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:20.870 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: q58.pro - @ - 联通 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:14:21.275 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 联通 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:23.367 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: q58.pro - @ - 电信 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:14:23.915 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 电信 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:25.985 | INFO     | __main__:check_and_update:273 - 开始更新域名: freedvd.cc 的 A 记录
+2025-01-12 04:14:26.225 | INFO     | __main__:update_domain_records:222 - 更新A记录: freedvd.cc - @ - 默认 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:14:26.710 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 190.93.247.127
+2025-01-12 04:14:27.324 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 104.19.41.90
+2025-01-12 04:14:28.255 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 190.93.247.127
+2025-01-12 04:14:29.333 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 104.21.29.190
+2025-01-12 04:14:30.431 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 1.0.0.5
+2025-01-12 04:14:32.469 | INFO     | __main__:update_domain_records:245 - 更新A记录: freedvd.cc - @ - 移动 - 104.21.225.183 (延迟: 193ms)
+2025-01-12 04:14:32.908 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 移动 - 190.93.247.127
+2025-01-12 04:14:34.707 | INFO     | __main__:update_domain_records:245 - 更新A记录: freedvd.cc - @ - 联通 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:14:35.337 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 联通 - 104.21.225.183
+2025-01-12 04:14:36.974 | INFO     | __main__:update_domain_records:245 - 更新A记录: freedvd.cc - @ - 电信 - 162.159.240.184 (延迟: 162ms)
+2025-01-12 04:14:37.475 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 电信 - 190.93.247.127
+2025-01-12 04:14:39.531 | INFO     | __main__:check_and_update:273 - 开始更新域名: freedvd.cc 的 AAAA 记录
+2025-01-12 04:14:39.746 | INFO     | __main__:update_domain_records:222 - 更新AAAA记录: freedvd.cc - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:14:40.394 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:40.930 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:42.042 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:42.579 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:44.088 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: freedvd.cc - @ - 移动 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:14:44.433 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 移动 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:46.225 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: freedvd.cc - @ - 联通 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:14:46.661 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 联通 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:47.782 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: freedvd.cc - @ - 电信 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:14:48.330 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 电信 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:14:49.833 | INFO     | __main__:check_and_update:273 - 开始更新域名: woodchen.ink 的 A 记录
+2025-01-12 04:14:50.007 | INFO     | __main__:update_domain_records:222 - 更新A记录: woodchen.ink - @ - 默认 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:14:50.348 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 默认 - 190.93.247.127
+2025-01-12 04:14:50.889 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 默认 - 104.19.41.90
+2025-01-12 04:14:51.978 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 默认 - 190.93.247.127
+2025-01-12 04:14:52.545 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 默认 - 104.21.29.190
+2025-01-12 04:14:53.630 | INFO     | __main__:update_domain_records:245 - 更新A记录: woodchen.ink - @ - 移动 - 104.21.225.183 (延迟: 193ms)
+2025-01-12 04:14:54.182 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 移动 - 190.93.247.127
+2025-01-12 04:14:55.462 | INFO     | __main__:update_domain_records:245 - 更新A记录: woodchen.ink - @ - 联通 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:14:55.952 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 联通 - 104.21.225.183
+2025-01-12 04:14:57.778 | INFO     | __main__:update_domain_records:245 - 更新A记录: woodchen.ink - @ - 电信 - 162.159.240.184 (延迟: 162ms)
+2025-01-12 04:14:58.196 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 电信 - 190.93.247.127
+2025-01-12 04:15:01.004 | INFO     | __main__:check_and_update:273 - 开始更新域名: woodchen.ink 的 AAAA 记录
+2025-01-12 04:15:01.191 | INFO     | __main__:update_domain_records:222 - 更新AAAA记录: woodchen.ink - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:15:02.787 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:03.867 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:04.427 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:04.960 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:06.629 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: woodchen.ink - @ - 移动 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:15:07.210 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 移动 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:08.710 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: woodchen.ink - @ - 联通 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:15:09.317 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 联通 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:10.957 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: woodchen.ink - @ - 电信 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:15:11.310 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 电信 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:12.665 | INFO     | __main__:check_and_update:273 - 开始更新域名: czl.net 的 A 记录
+2025-01-12 04:15:12.877 | INFO     | __main__:update_domain_records:222 - 更新A记录: czl.net - @ - 默认 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:15:13.253 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 190.93.247.127
+2025-01-12 04:15:14.044 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 104.19.16.172
+2025-01-12 04:15:14.909 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 190.93.247.127
+2025-01-12 04:15:15.563 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 104.21.30.243
+2025-01-12 04:15:16.187 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 1.0.0.5
+2025-01-12 04:15:18.285 | INFO     | __main__:update_domain_records:245 - 更新A记录: czl.net - @ - 移动 - 104.21.225.183 (延迟: 193ms)
+2025-01-12 04:15:18.759 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 移动 - 190.93.247.127
+2025-01-12 04:15:20.844 | INFO     | __main__:update_domain_records:245 - 更新A记录: czl.net - @ - 联通 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:15:21.280 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 联通 - 104.21.225.183
+2025-01-12 04:15:22.590 | INFO     | __main__:update_domain_records:245 - 更新A记录: czl.net - @ - 电信 - 162.159.240.184 (延迟: 162ms)
+2025-01-12 04:15:23.155 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 电信 - 190.93.247.127
+2025-01-12 04:15:25.502 | INFO     | __main__:check_and_update:273 - 开始更新域名: czl.net 的 AAAA 记录
+2025-01-12 04:15:25.679 | INFO     | __main__:update_domain_records:222 - 更新AAAA记录: czl.net - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:15:26.324 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:27.308 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 2606:4700:839f:8028:9842:28ff:1744:4451
+2025-01-12 04:15:28.205 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:28.677 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 2606:4700:839f:8028:9842:28ff:1744:4451
+2025-01-12 04:15:29.402 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:30.426 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:31.868 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: czl.net - @ - 移动 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:15:32.266 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 移动 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:33.657 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: czl.net - @ - 联通 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:15:33.987 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 联通 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:15:35.168 | INFO     | __main__:update_domain_records:245 - 更新AAAA记录: czl.net - @ - 电信 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:15:35.714 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: czl.net - @ - 电信 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:16:28.007 | INFO     | __main__:check_and_update:267 - 开始更新域名: q58.pro 的 A 记录
+2025-01-12 04:16:28.246 | INFO     | __main__:update_domain_records:222 - 更新A记录: q58.pro - @ - 默认 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:16:28.802 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 162.159.240.184
+2025-01-12 04:16:31.026 | INFO     | __main__:update_domain_records:238 - 更新A记录: q58.pro - @ - 移动 - 104.21.225.183 (延迟: 193ms)
+2025-01-12 04:16:31.563 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 移动 - 190.93.247.127
+2025-01-12 04:16:33.415 | INFO     | __main__:update_domain_records:238 - 更新A记录: q58.pro - @ - 联通 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:16:34.026 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 联通 - 104.21.225.183
+2025-01-12 04:16:35.685 | INFO     | __main__:update_domain_records:238 - 更新A记录: q58.pro - @ - 电信 - 162.159.240.184 (延迟: 162ms)
+2025-01-12 04:16:36.084 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 电信 - 190.93.247.127
+2025-01-12 04:16:37.932 | INFO     | __main__:check_and_update:267 - 开始更新域名: q58.pro 的 AAAA 记录
+2025-01-12 04:16:38.157 | INFO     | __main__:update_domain_records:222 - 更新AAAA记录: q58.pro - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:16:38.582 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:16:40.377 | INFO     | __main__:update_domain_records:238 - 更新AAAA记录: q58.pro - @ - 移动 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:16:40.983 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 移动 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:16:42.086 | INFO     | __main__:update_domain_records:238 - 更新AAAA记录: q58.pro - @ - 联通 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:16:42.731 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 联通 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:16:45.017 | INFO     | __main__:update_domain_records:238 - 更新AAAA记录: q58.pro - @ - 电信 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:16:45.549 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 电信 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:16:46.844 | INFO     | __main__:check_and_update:267 - 开始更新域名: freedvd.cc 的 A 记录
+2025-01-12 04:16:47.084 | INFO     | __main__:update_domain_records:222 - 更新A记录: freedvd.cc - @ - 默认 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:16:47.660 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 162.159.240.184
+2025-01-12 04:16:50.036 | INFO     | __main__:update_domain_records:238 - 更新A记录: freedvd.cc - @ - 移动 - 104.21.225.183 (延迟: 193ms)
+2025-01-12 04:16:50.536 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 移动 - 190.93.247.127
+2025-01-12 04:16:52.167 | INFO     | __main__:update_domain_records:238 - 更新A记录: freedvd.cc - @ - 联通 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:16:52.647 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 联通 - 104.21.225.183
+2025-01-12 04:16:54.627 | INFO     | __main__:update_domain_records:238 - 更新A记录: freedvd.cc - @ - 电信 - 162.159.240.184 (延迟: 162ms)
+2025-01-12 04:16:55.116 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 电信 - 190.93.247.127
+2025-01-12 04:16:57.197 | INFO     | __main__:check_and_update:267 - 开始更新域名: freedvd.cc 的 AAAA 记录
+2025-01-12 04:16:57.452 | INFO     | __main__:update_domain_records:222 - 更新AAAA记录: freedvd.cc - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666 (延迟: 20ms)
+2025-01-12 04:16:57.864 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:18:19.664 | INFO     | __main__:check_and_update:271 - 开始更新域名: q58.pro 的 A 记录
+2025-01-12 04:18:19.848 | INFO     | __main__:update_domain_records:222 - 更新A记录: q58.pro - @ - 默认 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:18:20.423 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 162.159.240.184
+2025-01-12 04:18:27.407 | INFO     | __main__:update_domain_records:240 - 更新A记录: q58.pro - @ - 移动 - 104.21.225.183 (延迟: 190ms)
+2025-01-12 04:18:27.803 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 移动 - 190.93.247.127
+2025-01-12 04:18:34.550 | INFO     | __main__:update_domain_records:240 - 更新A记录: q58.pro - @ - 联通 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:18:35.158 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 联通 - 104.21.225.183
+2025-01-12 04:18:41.987 | INFO     | __main__:update_domain_records:240 - 更新A记录: q58.pro - @ - 电信 - 104.17.80.170 (延迟: 134ms)
+2025-01-12 04:18:42.524 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 电信 - 190.93.247.127
+2025-01-12 04:18:49.335 | INFO     | __main__:check_and_update:271 - 开始更新域名: q58.pro 的 AAAA 记录
+2025-01-12 04:18:49.566 | INFO     | __main__:update_domain_records:222 - 更新AAAA记录: q58.pro - @ - 默认 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8 (延迟: 20ms)
+2025-01-12 04:18:49.910 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:18:57.186 | INFO     | __main__:update_domain_records:240 - 更新AAAA记录: q58.pro - @ - 移动 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8 (延迟: 20ms)
+2025-01-12 04:18:57.841 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 移动 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8
+2025-01-12 04:19:04.246 | INFO     | __main__:update_domain_records:240 - 更新AAAA记录: q58.pro - @ - 联通 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8 (延迟: 20ms)
+2025-01-12 04:19:04.664 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 联通 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8
+2025-01-12 04:19:11.746 | INFO     | __main__:update_domain_records:240 - 更新AAAA记录: q58.pro - @ - 电信 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8 (延迟: 20ms)
+2025-01-12 04:19:12.111 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: q58.pro - @ - 电信 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8
+2025-01-12 04:19:18.423 | INFO     | __main__:check_and_update:271 - 开始更新域名: freedvd.cc 的 A 记录
+2025-01-12 04:19:18.597 | INFO     | __main__:update_domain_records:222 - 更新A记录: freedvd.cc - @ - 默认 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:19:19.172 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 162.159.240.184
+2025-01-12 04:19:26.218 | INFO     | __main__:update_domain_records:240 - 更新A记录: freedvd.cc - @ - 移动 - 104.21.225.183 (延迟: 190ms)
+2025-01-12 04:19:26.784 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 移动 - 190.93.247.127
+2025-01-12 04:19:33.492 | INFO     | __main__:update_domain_records:240 - 更新A记录: freedvd.cc - @ - 联通 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:19:33.963 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 联通 - 104.21.225.183
+2025-01-12 04:19:41.426 | INFO     | __main__:update_domain_records:240 - 更新A记录: freedvd.cc - @ - 电信 - 104.17.80.170 (延迟: 134ms)
+2025-01-12 04:19:41.807 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 电信 - 190.93.247.127
+2025-01-12 04:19:48.170 | INFO     | __main__:check_and_update:271 - 开始更新域名: freedvd.cc 的 AAAA 记录
+2025-01-12 04:19:48.406 | INFO     | __main__:update_domain_records:222 - 更新AAAA记录: freedvd.cc - @ - 默认 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8 (延迟: 20ms)
+2025-01-12 04:19:48.872 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 默认 - 2606:4700:91b8:9ee0:db85:c8d2:4713:4666
+2025-01-12 04:19:55.260 | INFO     | __main__:update_domain_records:240 - 更新AAAA记录: freedvd.cc - @ - 移动 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8 (延迟: 20ms)
+2025-01-12 04:19:55.867 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 移动 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8
+2025-01-12 04:20:02.213 | INFO     | __main__:update_domain_records:240 - 更新AAAA记录: freedvd.cc - @ - 联通 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8 (延迟: 20ms)
+2025-01-12 04:20:02.896 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 联通 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8
+2025-01-12 04:20:09.978 | INFO     | __main__:update_domain_records:240 - 更新AAAA记录: freedvd.cc - @ - 电信 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8 (延迟: 20ms)
+2025-01-12 04:20:10.502 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: freedvd.cc - @ - 电信 - 2606:4700:8ddf:73bf:22f2:db27:a0ad:bd8
+2025-01-12 04:20:17.547 | INFO     | __main__:check_and_update:271 - 开始更新域名: woodchen.ink 的 A 记录
+2025-01-12 04:20:17.720 | INFO     | __main__:update_domain_records:222 - 更新A记录: woodchen.ink - @ - 默认 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:20:18.322 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 默认 - 162.159.240.184
+2025-01-12 04:20:25.162 | INFO     | __main__:update_domain_records:240 - 更新A记录: woodchen.ink - @ - 移动 - 104.21.225.183 (延迟: 190ms)
+2025-01-12 04:20:25.722 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 移动 - 190.93.247.127
+2025-01-12 04:20:32.612 | INFO     | __main__:update_domain_records:240 - 更新A记录: woodchen.ink - @ - 联通 - 190.93.247.127 (延迟: 55ms)
+2025-01-12 04:20:33.072 | INFO     | __main__:clean_existing_records:142 - 删除旧记录: woodchen.ink - @ - 联通 - 104.21.225.183

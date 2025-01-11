@@ -5,37 +5,29 @@ import schedule
 from loguru import logger
 from typing import Dict, List, Optional, Tuple
 import config
+from tencentcloud.common import credential
+from tencentcloud.common.profile.client_profile import ClientProfile
+from tencentcloud.common.profile.http_profile import HttpProfile
+from tencentcloud.dnspod.v20210323 import dnspod_client, models
 
 # 配置日志
-logger.add("dnspod.log", rotation="10 MB", level=config.LOG_LEVEL)
+logger.add("logs/dnspod.log", rotation="10 MB", level=config.LOG_LEVEL)
 
 
 class DNSPodManager:
     def __init__(self):
-        self.api_url = "https://dnsapi.cn"
-        self.common_params = {
-            "login_token": f"{config.DNSPOD_ID},{config.DNSPOD_TOKEN}",
-            "format": "json",
-            "lang": "cn",
-            "error_on_empty": "no",
-        }
+        # 实例化一个认证对象
+        cred = credential.Credential(config.SECRET_ID, config.SECRET_KEY)
+        # 实例化一个http选项，可选的，没有特殊需求可以跳过
+        httpProfile = HttpProfile()
+        httpProfile.endpoint = "dnspod.tencentcloudapi.com"
+        # 实例化一个client选项，可选的，没有特殊需求可以跳过
+        clientProfile = ClientProfile()
+        clientProfile.httpProfile = httpProfile
+        # 实例化要请求产品的client对象
+        self.client = dnspod_client.DnspodClient(cred, "", clientProfile)
         # 记录每个域名每种记录类型的最后更新时间
         self.last_update = {}  # 格式: {domain: {'A': timestamp, 'AAAA': timestamp}}
-
-    def _api_request(self, path: str, data: Dict) -> Dict:
-        """发送API请求"""
-        try:
-            url = f"{self.api_url}/{path}"
-            response = requests.post(url, data={**self.common_params, **data})
-            result = response.json()
-
-            if int(result.get("status", {}).get("code", -1)) != 1:
-                raise Exception(result.get("status", {}).get("message", "未知错误"))
-
-            return result
-        except Exception as e:
-            logger.error(f"API请求失败: {str(e)}")
-            raise
 
     def get_optimal_ips(self) -> Dict:
         """获取优选IP"""
@@ -79,46 +71,61 @@ class DNSPodManager:
         best_ip = min(ips, key=lambda x: x["latency"])
         return (best_ip["ip"], best_ip["latency"])
 
-    def get_record_list(self, domain: str) -> List:
+    def get_record_list(
+        self, domain: str, sub_domain: str = None, record_type: str = None
+    ) -> List:
         """获取域名记录列表"""
         try:
-            result = self._api_request("Record.List", {"domain": domain})
-            return result.get("records", [])
+            # 实例化一个请求对象
+            req = models.DescribeRecordListRequest()
+            req.Domain = domain
+            if sub_domain:
+                req.Subdomain = sub_domain
+            if record_type:
+                req.RecordType = record_type
+
+            # 通过client对象调用DescribeRecordList接口
+            resp = self.client.DescribeRecordList(req)
+            return resp.RecordList
         except Exception as e:
             logger.error(f"获取记录列表失败: {str(e)}")
             return []
 
-    def delete_record(self, domain: str, record_id: str) -> bool:
+    def delete_record(self, domain: str, record_id: int) -> bool:
         """删除DNS记录"""
         try:
-            self._api_request(
-                "Record.Remove", {"domain": domain, "record_id": record_id}
-            )
+            req = models.DeleteRecordRequest()
+            req.Domain = domain
+            req.RecordId = record_id
+            self.client.DeleteRecord(req)
             return True
         except Exception as e:
             logger.error(f"删除记录失败: {str(e)}")
             return False
 
-    def handle_record_conflicts(self, domain: str, sub_domain: str, record_type: str):
-        """处理记录冲突"""
-        records = self.get_record_list(domain)
-        for record in records:
-            # 如果是要添加A记录，需要删除CNAME记录
-            if (
-                record_type == "A"
-                and record["type"] == "CNAME"
-                and record["name"] == sub_domain
-            ):
-                logger.info(f"删除冲突的CNAME记录: {domain} - {sub_domain}")
-                self.delete_record(domain, record["id"])
-            # 如果是要添加CNAME记录，需要删除A记录
-            elif (
-                record_type == "CNAME"
-                and record["type"] == "A"
-                and record["name"] == sub_domain
-            ):
-                logger.info(f"删除冲突的A记录: {domain} - {sub_domain}")
-                self.delete_record(domain, record["id"])
+    def clean_existing_records(
+        self, domain: str, sub_domain: str, record_type: str, line: str
+    ) -> None:
+        """清理指定类型和线路的现有记录"""
+        try:
+            # 定义我们要管理的线路
+            managed_lines = ["默认", "移动", "联通", "电信"]
+
+            # 如果不是我们管理的线路，直接返回
+            if line not in managed_lines:
+                return
+
+            records = self.get_record_list(domain, sub_domain, record_type)
+            for record in records:
+                # 只删除我们管理的线路中的记录
+                if record.Line == line and record.Line in managed_lines:
+                    logger.info(
+                        f"删除旧记录: {domain} - {sub_domain} - {line} - {record.Value}"
+                    )
+                    self.delete_record(domain, record.RecordId)
+                    time.sleep(1)  # 添加短暂延时
+        except Exception as e:
+            logger.error(f"清理记录时出错: {str(e)}")
 
     def update_record(
         self,
@@ -128,43 +135,26 @@ class DNSPodManager:
         line: str,
         value: str,
         ttl: int,
-        remark: str = "YXIP",
+        remark: str = None,
     ) -> bool:
-        """更新DNS记录"""
+        """更新或创建DNS记录"""
         try:
-            # 处理记录冲突
-            self.handle_record_conflicts(domain, sub_domain, record_type)
+            # 先清理现有记录
+            self.clean_existing_records(domain, sub_domain, record_type, line)
+            time.sleep(1)  # 添加短暂延时
 
-            # 获取域名记录列表
-            records = self.get_record_list(domain)
+            # 创建新记录
+            req = models.CreateRecordRequest()
+            req.Domain = domain
+            req.SubDomain = sub_domain
+            req.RecordType = record_type
+            req.RecordLine = line
+            req.Value = value
+            req.TTL = ttl
+            if remark:
+                req.Remark = remark
 
-            # 查找匹配的记录
-            record_id = None
-            for record in records:
-                if (
-                    record["name"] == sub_domain
-                    and record["line"] == line
-                    and record["type"] == record_type
-                ):
-                    record_id = record["id"]
-                    break
-
-            # 更新或创建记录
-            data = {
-                "domain": domain,
-                "sub_domain": sub_domain,
-                "record_type": record_type,
-                "record_line": line,
-                "value": value,
-                "ttl": ttl,
-                "remark": remark,
-            }
-
-            if record_id:
-                data["record_id"] = record_id
-                self._api_request("Record.Modify", data)
-            else:
-                self._api_request("Record.Create", data)
+            self.client.CreateRecord(req)
             return True
         except Exception as e:
             logger.error(f"更新DNS记录失败: {str(e)}")
@@ -211,32 +201,30 @@ class DNSPodManager:
             logger.info(
                 f"更新{record_type}记录: {domain} - {sub_domain} - 默认 - {ip} (延迟: {latency}ms)"
             )
-            self.update_record(domain, sub_domain, record_type, "默认", ip, ttl, remark)
+            success = self.update_record(
+                domain, sub_domain, record_type, "默认", ip, ttl, remark
+            )
+            if not success:
+                logger.error(f"更新默认线路记录失败: {domain} - {sub_domain}")
+            time.sleep(1)  # 添加延时
 
         # 更新其他线路的记录
-        for line in domain_config["line"]:
-            if line == "默认":
-                continue
+        line_mapping = {"移动": "CM", "联通": "CU", "电信": "CT"}
 
-            if line == "移动":
-                line_key = "CM"
-            elif line == "联通":
-                line_key = "CU"
-            elif line == "电信":
-                line_key = "CT"
-            else:
-                continue
-
-            if line_key in ip_data[ip_version]:
+        for line, line_key in line_mapping.items():
+            if line_key in ip_data[ip_version] and ip_data[ip_version][line_key]:
                 best_ip = self.find_line_best_ip(ip_data, ip_version, line_key)
                 if best_ip:
                     ip, latency = best_ip
                     logger.info(
                         f"更新{record_type}记录: {domain} - {sub_domain} - {line} - {ip} (延迟: {latency}ms)"
                     )
-                    self.update_record(
+                    success = self.update_record(
                         domain, sub_domain, record_type, line, ip, ttl, remark
                     )
+                    if not success:
+                        logger.error(f"更新{line}线路记录失败: {domain} - {sub_domain}")
+                    time.sleep(1)  # 添加延时
 
     def check_and_update(self):
         """检查并更新所有域名"""
@@ -247,21 +235,20 @@ class DNSPodManager:
                 continue
 
             domain = domain_config["domain"]
-            record_type = domain_config["record_type"]
-            update_interval = domain_config["update_interval"] * 60  # 转换为秒
 
-            # 初始化域名的更新时间记录
-            if domain not in self.last_update:
-                self.last_update[domain] = {}
+            # 处理IPv4记录
+            if domain_config["ipv4_enabled"]:
+                ipv4_config = domain_config.copy()
+                ipv4_config["record_type"] = "A"
+                self.update_domain_records(ipv4_config)
+                time.sleep(1)  # 添加延时
 
-            # 获取该记录类型的最后更新时间
-            last_update = self.last_update[domain].get(record_type, 0)
-
-            # 检查是否需要更新
-            if current_time - last_update >= update_interval:
-                logger.info(f"开始更新域名: {domain} 的 {record_type} 记录")
-                self.update_domain_records(domain_config)
-                self.last_update[domain][record_type] = current_time
+            # 处理IPv6记录
+            if domain_config["ipv6_enabled"]:
+                ipv6_config = domain_config.copy()
+                ipv6_config["record_type"] = "AAAA"
+                self.update_domain_records(ipv6_config)
+                time.sleep(1)  # 添加延时
 
 
 def main():
