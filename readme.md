@@ -7,6 +7,11 @@
 
 支持docker运行, 需要配置腾讯云的密钥, 可以配置多个域名。5分钟请求一次接口, 并进行对比。
 
+## 效果
+
+![image](https://github.com/user-attachments/assets/b334e833-417a-4919-ae7c-799de67e60ba)
+
+
 ## 特性
 
 - 自动获取优选IP地址
