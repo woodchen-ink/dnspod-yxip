@@ -216,8 +216,9 @@ class DNSPodManager:
             self.current_ips[domain] = self.get_current_records(domain, sub_domain)
         current_records = self.current_ips[domain]
 
-        # 处理默认线路
+        # 处理IPv4记录
         if domain_config["ipv4_enabled"] and "v4" in ip_data:
+            # 处理默认线路
             best_ip = self.find_best_ip(ip_data, "v4")
             if best_ip:
                 ip, latency = best_ip
@@ -235,62 +236,91 @@ class DNSPodManager:
                         current_records["默认"]["A"] = ip
                     time.sleep(1)
 
+            # 更新其他线路的IPv4记录
+            line_mapping = {"移动": "CM", "联通": "CU", "电信": "CT"}
+            for line, line_key in line_mapping.items():
+                if line_key in ip_data["v4"]:
+                    best_ip = self.find_line_best_ip(ip_data, "v4", line_key)
+                    if best_ip:
+                        ip, latency = best_ip
+                        current_ip = current_records.get(line, {}).get("A")
+                        if current_ip != ip:
+                            logger.info(
+                                f"更新A记录: {domain} - {sub_domain} - {line} - {ip} (延迟: {latency}ms)"
+                            )
+                            if self.update_record(
+                                domain, sub_domain, "A", line, ip, ttl, remark
+                            ):
+                                # 更新成功后更新缓存
+                                if line not in current_records:
+                                    current_records[line] = {}
+                                current_records[line]["A"] = ip
+                            time.sleep(1)
+
+        # 处理IPv6记录
         if domain_config["ipv6_enabled"] and "v6" in ip_data:
-            best_ip = self.find_best_ip(ip_data, "v6")
-            if best_ip:
-                ip, latency = best_ip
-                current_ip = current_records.get("默认", {}).get("AAAA")
-                if current_ip != ip:
-                    logger.info(
-                        f"更新AAAA记录: {domain} - {sub_domain} - 默认 - {ip} (延迟: {latency}ms)"
-                    )
-                    if self.update_record(
-                        domain, sub_domain, "AAAA", "默认", ip, ttl, remark
-                    ):
-                        # 更新成功后更新缓存
-                        if "默认" not in current_records:
-                            current_records["默认"] = {}
-                        current_records["默认"]["AAAA"] = ip
-                    time.sleep(1)
+            # 获取所有线路的最佳IPv6地址
+            line_mapping = {"移动": "CM", "联通": "CU", "电信": "CT"}
+            best_ips = {}
+            for line, line_key in line_mapping.items():
+                if line_key in ip_data["v6"]:
+                    best_ip = self.find_line_best_ip(ip_data, "v6", line_key)
+                    if best_ip:
+                        ip, latency = best_ip
+                        best_ips[line] = (ip, latency)
 
-        # 更新其他线路的记录
-        line_mapping = {"移动": "CM", "联通": "CU", "电信": "CT"}
-
-        for line, line_key in line_mapping.items():
-            if domain_config["ipv4_enabled"] and "v4" in ip_data:
-                best_ip = self.find_line_best_ip(ip_data, "v4", line_key)
-                if best_ip:
-                    ip, latency = best_ip
-                    current_ip = current_records.get(line, {}).get("A")
+            # 检查是否所有线路的IPv6地址都相同
+            if best_ips:
+                unique_ips = {ip for ip, _ in best_ips.values()}
+                if len(unique_ips) == 1:
+                    # 所有线路的IPv6地址相同，只添加默认线路
+                    ip = list(unique_ips)[0]
+                    min_latency = min(latency for _, latency in best_ips.values())
+                    current_ip = current_records.get("默认", {}).get("AAAA")
                     if current_ip != ip:
                         logger.info(
-                            f"更新A记录: {domain} - {sub_domain} - {line} - {ip} (延迟: {latency}ms)"
+                            f"更新AAAA记录: {domain} - {sub_domain} - 默认 - {ip} (延迟: {min_latency}ms) [所有线路IP相同]"
                         )
                         if self.update_record(
-                            domain, sub_domain, "A", line, ip, ttl, remark
+                            domain, sub_domain, "AAAA", "默认", ip, ttl, remark
                         ):
                             # 更新成功后更新缓存
-                            if line not in current_records:
-                                current_records[line] = {}
-                            current_records[line]["A"] = ip
+                            if "默认" not in current_records:
+                                current_records["默认"] = {}
+                            current_records["默认"]["AAAA"] = ip
                         time.sleep(1)
+                else:
+                    # IPv6地址不同，需要为每个线路添加记录
+                    for line, (ip, latency) in best_ips.items():
+                        current_ip = current_records.get(line, {}).get("AAAA")
+                        if current_ip != ip:
+                            logger.info(
+                                f"更新AAAA记录: {domain} - {sub_domain} - {line} - {ip} (延迟: {latency}ms)"
+                            )
+                            if self.update_record(
+                                domain, sub_domain, "AAAA", line, ip, ttl, remark
+                            ):
+                                # 更新成功后更新缓存
+                                if line not in current_records:
+                                    current_records[line] = {}
+                                current_records[line]["AAAA"] = ip
+                            time.sleep(1)
 
-            if domain_config["ipv6_enabled"] and "v6" in ip_data:
-                best_ip = self.find_line_best_ip(ip_data, "v6", line_key)
-                if best_ip:
-                    ip, latency = best_ip
-                    current_ip = current_records.get(line, {}).get("AAAA")
+                    # 添加默认线路（使用延迟最低的IP）
+                    best_ip = min(best_ips.items(), key=lambda x: x[1][1])
+                    ip, latency = best_ip[1]
+                    current_ip = current_records.get("默认", {}).get("AAAA")
                     if current_ip != ip:
                         logger.info(
-                            f"更新AAAA记录: {domain} - {sub_domain} - {line} - {ip} (延迟: {latency}ms)"
+                            f"更新AAAA记录: {domain} - {sub_domain} - 默认 - {ip} (延迟: {latency}ms)"
                         )
                         if self.update_record(
-                            domain, sub_domain, "AAAA", line, ip, ttl, remark
+                            domain, sub_domain, "AAAA", "默认", ip, ttl, remark
                         ):
                             # 更新成功后更新缓存
-                            if line not in current_records:
-                                current_records[line] = {}
-                            current_records[line]["AAAA"] = ip
+                            if "默认" not in current_records:
+                                current_records["默认"] = {}
+                            current_records["默认"]["AAAA"] = ip
                         time.sleep(1)
 
     def check_and_update(self):
