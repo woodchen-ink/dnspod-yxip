@@ -6,7 +6,7 @@ from loguru import logger
 # 加载YAML配置
 def load_config() -> Dict:
     """从YAML文件加载配置"""
-    yaml_files = ["config.yaml", "config.example.yaml"]
+    yaml_files = ["config.yaml"]
     for yaml_file in yaml_files:
         if os.path.exists(yaml_file):
             try:
