@@ -29,23 +29,28 @@
 
 1. 创建配置文件：
 ```bash
-cp .env.example .env
+cp config.example.yaml config.yaml
 ```
 
-2. 编辑 `.env` 文件，填写您的配置：
-```ini
-# DNSPOD API 配置
-TENCENT_SECRET_ID=your_secret_id_here
-TENCENT_SECRET_KEY=your_secret_key_here
+2. 编辑 `config.yaml` 文件，填写您的配置：
+```yaml
+# 腾讯云API配置
+tencent:
+  secret_id: your_secret_id_here
+  secret_key: your_secret_key_here
 
-# 域名配置 - 域名1
-DOMAIN_1=example1.com
-SUB_DOMAIN_1=@           # 子域名，@ 表示根域名
-REMARK_1=优选IP          # 记录备注
-TTL_1=600               # TTL值（秒）
-IPV4_ENABLED_1=true     # 是否启用IPv4记录
-IPV6_ENABLED_1=true     # 是否启用IPv6记录
-ENABLED_1=true          # 是否启用此域名配置
+# 日志级别
+log_level: INFO
+
+# 域名配置列表
+domains:
+  - domain: example1.com
+    sub_domain: "@"      # 子域名，@ 表示根域名
+    remark: 优选IP       # 记录备注
+    ttl: 600            # TTL值（秒）
+    ipv4_enabled: true  # 是否启用IPv4记录
+    ipv6_enabled: true  # 是否启用IPv6记录
+    enabled: true       # 是否启用此域名配置
 ```
 
 3. 拉取并运行容器：
@@ -64,8 +69,8 @@ cd dnspod-yxip
 
 2. 创建并编辑配置文件：
 ```bash
-cp .env.example .env
-# 编辑 .env 文件
+cp config.example.yaml config.yaml
+# 编辑 config 文件
 ```
 
 3. 构建镜像：
@@ -81,15 +86,14 @@ docker compose up -d
 ## 配置说明
 
 每个域名配置包含以下参数：
-- `DOMAIN_n`: 域名
-- `SUB_DOMAIN_n`: 子域名，@ 表示根域名，* 表示泛解析
-- `REMARK_n`: 记录备注
-- `TTL_n`: TTL值（秒）
-- `IPV4_ENABLED_n`: 是否启用IPv4记录
-- `IPV6_ENABLED_n`: 是否启用IPv6记录
-- `ENABLED_n`: 是否启用此域名配置
+- `DOMAIN`: 域名
+- `SUB_DOMAIN`: 子域名，@ 表示根域名，* 表示泛解析
+- `REMARK`: 记录备注
+- `TTL`: TTL值（秒）
+- `IPV4_ENABLED`: 是否启用IPv4记录
+- `IPV6_ENABLED`: 是否启用IPv6记录
+- `ENABLED`: 是否启用此域名配置
 
-其中 n 是域名编号（1, 2, 3...），可以配置任意数量的域名。
 
 ## 日志查看
 

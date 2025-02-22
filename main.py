@@ -9,6 +9,9 @@ from tencentcloud.common import credential
 from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
 from tencentcloud.dnspod.v20210323 import dnspod_client, models
+import subprocess
+import os
+from datetime import datetime, timedelta
 
 # 配置日志
 logger.add("logs/dnspod.log", rotation="10 MB", level=config.LOG_LEVEL)
@@ -30,6 +33,10 @@ class DNSPodManager:
         self.current_ips = (
             {}
         )  # 格式: {domain: {'默认': {'A': ip, 'AAAA': ip}, '移动': {...}}}
+        # IP可用性缓存，格式：{ip: {'available': bool, 'last_check': datetime}}
+        self.ip_availability_cache = {}
+        # IP可用性缓存时间设置为检查间隔的1/3
+        self.cache_duration = max(1, config.check_interval // 3)
         # 初始化时获取所有域名当前的记录
         self.init_current_records()
 
@@ -199,50 +206,134 @@ class DNSPodManager:
             logger.error(f"获取当前记录失败: {str(e)}")
             return {}
 
-    def update_domain_records(self, domain_config: Dict) -> None:
-        """更新单个域名的记录"""
+    def check_ip_availability(self, ip: str) -> bool:
+        """检查IP是否可以ping通"""
+        # 检查缓存
+        now = datetime.now()
+        if ip in self.ip_availability_cache:
+            cache_info = self.ip_availability_cache[ip]
+            if now - cache_info['last_check'] < timedelta(minutes=self.cache_duration):
+                return cache_info['available']
+
+        try:
+            # 根据操作系统选择ping命令参数
+            if os.name == 'nt':  # Windows系统
+                ping_args = ['ping', '-n', '1', '-w', '1000', ip]
+            else:  # Linux/Unix系统
+                ping_args = ['ping', '-c', '1', '-W', '1', ip]
+            
+            result = subprocess.run(ping_args, 
+                                  capture_output=True, 
+                                  text=True)
+            available = result.returncode == 0
+            
+            # 更新缓存
+            self.ip_availability_cache[ip] = {
+                'available': available,
+                'last_check': now
+            }
+            
+            if not available:
+                logger.warning(f"IP {ip} ping测试失败，命令输出：{result.stdout if result.stdout else result.stderr}")
+            return available
+        except Exception as e:
+            logger.error(f"Ping测试出错 - IP: {ip}, 错误信息: {str(e)}, 命令参数: {ping_args}")
+            return False
+
+    def find_best_available_ip(self, ip_data: Dict, ip_version: str) -> Optional[Tuple[str, int]]:
+        """查找可用且延迟最低的IP，返回(IP, 延迟)"""
+        if ip_version != "v4":  # 只检查IPv4地址
+            return self.find_best_ip(ip_data, ip_version)
+
+        # 按延迟排序所有IP地址，并获取优选IP，检查IP可用性，更新不同线路的记录等功能。
+        all_ips = []
+        for line_key in ["CM", "CU", "CT"]:
+            if line_key in ip_data[ip_version]:
+                all_ips.extend(ip_data[ip_version][line_key])
+        
+        # 按延迟排序
+        all_ips.sort(key=lambda x: x["latency"])
+        
+        # 查找第一个可用的IP
+        for ip_info in all_ips:
+            if self.check_ip_availability(ip_info["ip"]):
+                return (ip_info["ip"], ip_info["latency"])
+        
+        return None
+
+    def find_line_best_available_ip(
+        self, ip_data: Dict, ip_version: str, line_key: str
+    ) -> Optional[Tuple[str, int]]:
+        """查找指定线路可用且延迟最低的IP"""
+        if ip_version != "v4":  # 只检查IPv4地址
+            return self.find_line_best_ip(ip_data, ip_version, line_key)
+
+        if line_key not in ip_data[ip_version]:
+            return None
+
+        ips = ip_data[ip_version][line_key]
+        if not ips:
+            return None
+
+        # 按延迟排序
+        ips.sort(key=lambda x: x["latency"])
+        
+        # 查找第一个可用的IP
+        for ip_info in ips:
+            if self.check_ip_availability(ip_info["ip"]):
+                return (ip_info["ip"], ip_info["latency"])
+        
+        return None
+    def update_domain_records(self, domain_config):
+        """更新指定域名的记录"""
         domain = domain_config["domain"]
         sub_domain = domain_config["sub_domain"]
-        ttl = domain_config["ttl"]
-        remark = domain_config["remark"]
-
-        # 获取优选IP数据
-        ip_data = self.get_optimal_ips()
-        if not ip_data:
-            return
+        ttl = domain_config.get("ttl", 600)
+        remark = domain_config.get("remark")
 
         # 获取当前记录
-        if domain not in self.current_ips:
-            self.current_ips[domain] = self.get_current_records(domain, sub_domain)
-        current_records = self.current_ips[domain]
+        current_records = self.get_current_records(domain, sub_domain)
+
+        # 获取优选IP
+        ip_data = self.get_optimal_ips()
+        if not ip_data:
+            logger.error(f"无法获取优选IP，跳过更新 {domain}")
+            return
 
         # 处理IPv4记录
         if domain_config["ipv4_enabled"] and "v4" in ip_data:
-            # 处理默认线路
-            best_ip = self.find_best_ip(ip_data, "v4")
-            if best_ip:
-                ip, latency = best_ip
-                current_ip = current_records.get("默认", {}).get("A")
-                if current_ip != ip:
-                    logger.info(
-                        f"更新A记录: {domain} - {sub_domain} - 默认 - {ip} (延迟: {latency}ms)"
-                    )
-                    if self.update_record(
-                        domain, sub_domain, "A", "默认", ip, ttl, remark
-                    ):
-                        # 更新成功后更新缓存
-                        if "默认" not in current_records:
-                            current_records["默认"] = {}
-                        current_records["默认"]["A"] = ip
-                    time.sleep(1)
-
-            # 更新其他线路的IPv4记录
+            # 获取所有线路的最佳IPv4地址
             line_mapping = {"移动": "CM", "联通": "CU", "电信": "CT"}
+            best_ips = {}
             for line, line_key in line_mapping.items():
-                if line_key in ip_data["v4"]:
-                    best_ip = self.find_line_best_ip(ip_data, "v4", line_key)
-                    if best_ip:
-                        ip, latency = best_ip
+                best_ip = self.find_line_best_available_ip(ip_data, "v4", line_key)
+                if best_ip:
+                    ip, latency = best_ip
+                    best_ips[line] = (ip, latency)
+
+            # 检查是否所有线路的IPv4地址都相同
+            if best_ips:
+                unique_ips = {ip for ip, _ in best_ips.values()}
+                if len(unique_ips) == 1:
+                    # 所有线路的IPv4地址相同，只添加默认线路
+                    ip = list(unique_ips)[0]
+                    min_latency = min(latency for _, latency in best_ips.values())
+                    current_ip = current_records.get("默认", {}).get("A")
+                    if current_ip != ip:
+                        logger.info(
+                            f"更新A记录: {domain} - {sub_domain} - 默认 - {ip} (延迟: {min_latency}ms) [所有线路IP相同]"
+                        )
+                        if self.update_record(
+                            domain, sub_domain, "A", "默认", ip, ttl, remark
+                        ):
+                            # 更新成功后更新缓存
+                            if "默认" not in current_records:
+                                current_records["默认"] = {}
+                            current_records["默认"]["A"] = ip
+                        time.sleep(1)
+                else:
+                    # IPv4地址不同，需要为每个线路添加记录
+                    for line, (ip, latency) in best_ips.items():
                         current_ip = current_records.get(line, {}).get("A")
                         if current_ip != ip:
                             logger.info(
@@ -257,17 +348,33 @@ class DNSPodManager:
                                 current_records[line]["A"] = ip
                             time.sleep(1)
 
+                    # 添加默认线路（使用延迟最低的IP）
+                    best_ip = min(best_ips.items(), key=lambda x: x[1][1])
+                    ip, latency = best_ip[1]
+                    current_ip = current_records.get("默认", {}).get("A")
+                    if current_ip != ip:
+                        logger.info(
+                            f"更新A记录: {domain} - {sub_domain} - 默认 - {ip} (延迟: {latency}ms)"
+                        )
+                        if self.update_record(
+                            domain, sub_domain, "A", "默认", ip, ttl, remark
+                        ):
+                            # 更新成功后更新缓存
+                            if "默认" not in current_records:
+                                current_records["默认"] = {}
+                            current_records["默认"]["A"] = ip
+                        time.sleep(1)
+
         # 处理IPv6记录
         if domain_config["ipv6_enabled"] and "v6" in ip_data:
             # 获取所有线路的最佳IPv6地址
             line_mapping = {"移动": "CM", "联通": "CU", "电信": "CT"}
             best_ips = {}
             for line, line_key in line_mapping.items():
-                if line_key in ip_data["v6"]:
-                    best_ip = self.find_line_best_ip(ip_data, "v6", line_key)
-                    if best_ip:
-                        ip, latency = best_ip
-                        best_ips[line] = (ip, latency)
+                best_ip = self.find_line_best_ip(ip_data, "v6", line_key)
+                if best_ip:
+                    ip, latency = best_ip
+                    best_ips[line] = (ip, latency)
 
             # 检查是否所有线路的IPv6地址都相同
             if best_ips:
@@ -339,9 +446,8 @@ def main():
     manager.check_and_update()
 
     # 每5分钟检查一次是否需要更新
-    schedule.every(5).minutes.do(manager.check_and_update)
-
-    logger.info("程序启动成功，开始监控更新（每5分钟检查一次）...")
+    schedule.every(config.check_interval).minutes.do(manager.check_and_update)
+    logger.info(f"程序启动成功，开始监控更新（每{config.check_interval}分钟检查一次）...")
     while True:
         schedule.run_pending()
         time.sleep(1)

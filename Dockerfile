@@ -4,6 +4,9 @@ FROM python:3.11-slim
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+# 安装ping工具
+RUN apt-get update && apt-get install -y iputils-ping && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # 复制项目文件
@@ -18,4 +21,4 @@ RUN pip install -r requirements.txt
 RUN mkdir -p logs && touch .env
 
 # 运行程序
-CMD ["python", "main.py"] 
+CMD ["python", "main.py"]

@@ -1,0 +1,36 @@
+# 腾讯云API配置
+tencent:
+  secret_id: your_secret_id_here
+  secret_key: your_secret_key_here
+
+# 日志级别
+log_level: INFO
+
+# 更新检查间隔（分钟）
+check_interval: 15
+
+# 域名配置列表
+domains:
+  - domain: example1.com
+    sub_domain: "@"      # 子域名，@ 表示根域名
+    remark: 优选IP       # 记录备注
+    ttl: 600            # TTL值（秒）
+    ipv4_enabled: true  # 是否启用IPv4记录
+    ipv6_enabled: true  # 是否启用IPv6记录
+    enabled: true       # 是否启用此域名配置
+
+  - domain: example2.com
+    sub_domain: www
+    remark: 优选IP
+    ttl: 600
+    ipv4_enabled: true
+    ipv6_enabled: true
+    enabled: true
+
+  - domain: example3.com
+    sub_domain: "*"      # 泛解析
+    remark: CloudFlare优选
+    ttl: 1800
+    ipv4_enabled: true
+    ipv6_enabled: true
+    enabled: true
