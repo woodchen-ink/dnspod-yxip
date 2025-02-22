@@ -33,25 +33,6 @@ cp config.example.yaml config.yaml
 ```
 
 2. 编辑 `config.yaml` 文件，填写您的配置：
-```yaml
-# 腾讯云API配置
-tencent:
-  secret_id: your_secret_id_here
-  secret_key: your_secret_key_here
-
-# 日志级别
-log_level: INFO
-
-# 域名配置列表
-domains:
-  - domain: example1.com
-    sub_domain: "@"      # 子域名，@ 表示根域名
-    remark: 优选IP       # 记录备注
-    ttl: 600            # TTL值（秒）
-    ipv4_enabled: true  # 是否启用IPv4记录
-    ipv6_enabled: true  # 是否启用IPv6记录
-    enabled: true       # 是否启用此域名配置
-```
 
 3. 拉取并运行容器：
 ```bash
@@ -63,7 +44,7 @@ docker compose up -d
 
 1. 克隆仓库：
 ```bash
-git clone https://github.com/your-username/dnspod-yxip.git
+git clone https://github.com/woodchen-ink/dnspod-yxip.git
 cd dnspod-yxip
 ```
 
