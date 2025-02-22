@@ -1,6 +1,7 @@
 import os
 from typing import Dict, List
 import yaml
+from loguru import logger
 
 # 加载YAML配置
 def load_config() -> Dict:
@@ -8,8 +9,21 @@ def load_config() -> Dict:
     yaml_files = ["config.yaml", "config.example.yaml"]
     for yaml_file in yaml_files:
         if os.path.exists(yaml_file):
-            with open(yaml_file, "r", encoding="utf-8") as f:
-                return yaml.safe_load(f)
+            try:
+                with open(yaml_file, "r", encoding="utf-8") as f:
+                    config = yaml.safe_load(f)
+                    logger.info(f"成功加载配置文件: {yaml_file}")
+                    # 验证必要的配置项
+                    if not config.get("tencent", {}).get("secret_id"):
+                        logger.error(f"配置文件 {yaml_file} 中缺少必要的配置项: tencent.secret_id")
+                        return {}
+                    if not config.get("tencent", {}).get("secret_key"):
+                        logger.error(f"配置文件 {yaml_file} 中缺少必要的配置项: tencent.secret_key")
+                        return {}
+                    return config
+            except Exception as e:
+                logger.error(f"加载配置文件 {yaml_file} 失败: {str(e)}")
+    logger.error("未找到有效的配置文件")
     return {}
 
 # 加载配置

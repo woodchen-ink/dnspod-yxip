@@ -18,7 +18,7 @@ COPY main.py .
 RUN pip install -r requirements.txt
 
 # 创建配置文件和日志目录
-RUN mkdir -p logs && touch .env
+RUN mkdir -p logs && touch config.yaml
 
 # 运行程序
 CMD ["python", "main.py"]
