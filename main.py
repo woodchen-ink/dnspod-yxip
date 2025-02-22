@@ -222,20 +222,32 @@ class DNSPodManager:
             else:  # Linux/Unix系统
                 ping_args = ['ping', '-c', '1', '-W', '1', ip]
             
-            result = subprocess.run(ping_args, 
-                                  capture_output=True, 
-                                  text=True)
-            available = result.returncode == 0
+            # 最多尝试3次ping
+            max_retries = 3
+            for attempt in range(max_retries):
+                result = subprocess.run(ping_args, 
+                                      capture_output=True, 
+                                      text=True)
+                if result.returncode == 0:
+                    # 更新缓存
+                    self.ip_availability_cache[ip] = {
+                        'available': True,
+                        'last_check': now
+                    }
+                    return True
+                
+                # 如果不是最后一次尝试，等待短暂时间后重试
+                if attempt < max_retries - 1:
+                    time.sleep(1)  # 等待1秒后重试
             
+            # 所有尝试都失败
+            logger.warning(f"IP {ip} ping测试失败（尝试{max_retries}次），最后一次命令输出：{result.stdout if result.stdout else result.stderr}")
             # 更新缓存
             self.ip_availability_cache[ip] = {
-                'available': available,
+                'available': False,
                 'last_check': now
             }
-            
-            if not available:
-                logger.warning(f"IP {ip} ping测试失败，命令输出：{result.stdout if result.stdout else result.stderr}")
-            return available
+            return False
         except Exception as e:
             logger.error(f"Ping测试出错 - IP: {ip}, 错误信息: {str(e)}, 命令参数: {ping_args}")
             return False
